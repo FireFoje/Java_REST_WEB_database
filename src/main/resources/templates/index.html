@@ -1,11 +1,16 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Spring Security Example</title>
+    <title>Главная</title>
+    <meta charset="UTF-8">
 </head>
 <body>
-<h1>Welcome to Index PAGE!</h1>
-
-
+<form th:action="@{/user/get/{id}}" th:method="get" th:object="${user}">
+    <h3>Main page</h3>
+    <h4><a href="/login">Log in</a></h4>
+    <h4><a href="/registration">Registration</a></h4>
+    <h4><a th:href="@{/user/get/{id}(id=${user.getId()})}">Profile(User)</a></h4>
+    <h4><a href="/admin">Users list(Only for admin)</a></h4>
+</form>
 </body>
 </html>
