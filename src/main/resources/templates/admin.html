@@ -6,7 +6,6 @@
 </head>
 <body>
 <h1>Users list</h1>
-
 <table>
     <thead>
     <tr>
@@ -17,16 +16,17 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="user : ${allUsers}">
-        <td th:text="${user.id}"></td>
-        <td th:text="${user.username}"></td>
-        <td th:text="${user.email}"></td>
+    <tr th:each="users : ${user}">
+        <td th:text="${users.id}"></td>
+        <td th:text="${users.username}"></td>
+        <td th:text="${users.email}"></td>
         <td>
             <form th:action="@{/admin}" method="post">
-                <input type="hidden" name="userId" th:value="${user.id}" />
+                <input type="hidden" name="userId" th:value="${users.id}" />
                 <button type="submit" name="action" value="delete">Delete</button>
             </form>
-            <form th:action="@{/admin/get/{userId}(userId=${user.id})}" method="get">
+            <form th:action="@{/user/get/__${users.id}__}" method="get">
+                <input type="hidden" name="userId" th:value="${users.id}" />
                 <button type="submit">Get User</button>
             </form>
         </td>
