@@ -21,11 +21,11 @@
         <td th:text="${users.username}"></td>
         <td th:text="${users.email}"></td>
         <td>
-            <form th:action="@{/admin}" method="post">
+            <form th:action="@{/admin/users}" method="post">
                 <input type="hidden" name="userId" th:value="${users.id}" />
                 <button type="submit" name="action" value="delete">Delete</button>
             </form>
-            <form th:action="@{/user/get/__${users.id}__}" method="get">
+            <form th:action="@{/user/__${users.id}__}" method="get">
                 <input type="hidden" name="userId" th:value="${users.id}" />
                 <button type="submit">Get User</button>
             </form>
@@ -33,10 +33,16 @@
     </tr>
     </tbody>
 </table>
-
+<form th:action="@{/}" method="get">
+    <input type="hidden" name="userId"/>
+    <button type="submit">Back to main page</button>
+</form>
 <form action="/logout" method="post">
     <button type="submit">Logout</button>
 </form>
-
+<form th:action="@{/new}" method="post">
+    <input type="hidden" name="_method" value="edit"/>
+    <button type="submit">Add user</button>
+</form>
 </body>
 </html>

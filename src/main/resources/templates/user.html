@@ -5,34 +5,34 @@
     <title>User Profile</title>
 </head>
 <body>
-<h1>Users list</h1>
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Username</th>
-        <th>Email</th>
-        <th>Action</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="users : ${user}">
-        <td th:text="${user.id}"></td>
-        <td th:text="${users.username}"></td>
-        <td th:text="${users.email}"></td>
-        <td>
-            <form th:action="@{/user/get/__${user.id}__}" method="get">
-                <input type="hidden" name="id" th:value="${users.id}" />
-                <button type="submit">Get User</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
-
+<form th:action="@{/user/get/{id}(id=${user.id})}" th:method="get" th:object="${user}">
+    <table>
+        <thead>
+        <tr>
+            <th>Username</th>
+            <th>Lastname</th>
+            <th>Email</th>
+        </tr>
+        </thead>
+        <tbody>
+        <form>
+            <td th:text="${user.getName()}"></td>
+            <td th:text="${user.getLastName()}"></td>
+            <td th:text="${user.getEmail()}"></td>
+        </form>
+        </tbody>
+    </table>
+</form>
+<form th:action="@{/edit/__${user.id}__}" method="get">
+    <input type="hidden" name="_method" value="edit"/>
+    <button type="submit">Edit</button>
+</form>
+<form th:action="@{/}" method="get">
+    <input type="hidden" name="userId"/>
+    <button type="submit">Back to main page</button>
+</form>
 <form action="/logout" method="post">
     <button type="submit">Logout</button>
 </form>
-
 </body>
 </html>

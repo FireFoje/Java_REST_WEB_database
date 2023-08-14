@@ -2,16 +2,21 @@ package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
+import javax.validation.Valid;
+
 @Controller
+@Transactional
 public class AdminController {
     @Autowired
     private UserService userService;
@@ -21,37 +26,72 @@ public class AdminController {
     public String loginPage(Authentication authentication, Model model, User user) {
         if (authentication != null && authentication.isAuthenticated()) {
             model.addAttribute("user", user);
-            return "index";
+            return "redirect:/";
         }
         return "login";
     }
 
-
-
-
-    @GetMapping("/admin")
-    public String userList(Model model) {
-        model.addAttribute("user", userService.getAllUsers());
-        return "admin";
+    @GetMapping("/add")
+    public String showAddNewForm(User user, Model model) {
+        model.addAttribute("userForm", new User());
+        return "add_user";
     }
-
-    @PostMapping("/admin")
-    public String deleteUser(@RequestParam(required = true, defaultValue = "") Long userId,
-                             @RequestParam(required = true, defaultValue = "") String action,
-                             Model model) {
-        if (action.equals("delete")) {
-            userService.deleteUser(userId);
+    @PostMapping("/new")
+    public String addUser(@Valid User user, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            return "add_user";
         }
-        return "redirect:/admin";
+        userService.saveUser(user);
+        return "redirect:/admin/users";
     }
-    @GetMapping("/user/get/{id}")
+    @GetMapping("/")
+    public String showProfile(Model model, Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            User user = (User) authentication.getPrincipal();
+            model.addAttribute("user", user);
+            return "index";
+        } else {
+            return "login";
+        }
+    }
+
+    @GetMapping("/user/{id}")
     public String getUserProfile(@PathVariable(value = "id", required = true) long id, Model model) {
         model.addAttribute("user", userService.findUserById(id));
-        return "admin";
+        return "user";
     }
-    @GetMapping("/admin/get/{userId}")
-    public String gtUser(@PathVariable("userId") Long userId, Model model) {
-        model.addAttribute("user", userService.findUserById(userId));
-        return "admin";
+
+    @GetMapping("/admin/users")
+    public String userList(Model model) {
+        model.addAttribute("user", userService.getAllUsers());
+        return "users";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String getUser(@PathVariable("id") long id, Model model) {
+        User user = userService.findUserById(id);
+        model.addAttribute("user", user);
+        return "edit";
+    }
+
+    @PostMapping("/update/{id}")
+    @Transactional
+    public String updateUpdate(@PathVariable("id") long id, @Valid User user, BindingResult result) {
+        if (result.hasErrors()) {
+            user.setId(id);
+            return "edit";
+        }
+        userService.saveUser(user);
+        return "redirect:/";
+    }
+
+    @PostMapping("/admin/users")
+    public String  deleteUser(@RequestParam(required = true, defaultValue = "" ) Long userId,
+                              @RequestParam(required = true, defaultValue = "" ) String action,
+                              Model model) {
+        if (action.equals("delete")){
+            userService.deleteUser(userId);
+        }
+        return "redirect:/admin/users";
     }
 }

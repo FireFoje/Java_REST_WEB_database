@@ -1,30 +1,23 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <title>Главная</title>
     <meta charset="UTF-8">
 </head>
 <body>
 <h1>Main page</h1>
+<div>
+    Пользователя зовут <span th:text="${user.getName()}"></span>
+    <br>
+    Уровень доступа - <span th:text="${user.getRoles()}"></span><br>
 
-<form th:action="@{/admin}" method="post" th:object="${user}">
-    <input type="hidden" name="userId" th:value="${user.id}"/>
-    <button type="submit" name="action">Users list</button>
-</form>
-<form th:action="@{/user/get/__${user.id}__}" method="get" th:object="${user}">
-    <input type="hidden" name="id" th:value="${user.id}"/>
-    <button type="submit">Get User Profile</button>
-</form>
-<form action="/logout" method="post">
-    <button type="submit">Logout</button>
-</form>
+</div>
+<form th:action="@{/user/{id}(id=${user.getId()})}" th:method="get" th:object="${user}">
+    <h3>Main page</h3>
+    <h4><a href="/logout">Logout</a></h4>
+    <h4><a th:href="@{/user/__${user.getId()}__}">Profile(User)</a></h4>
+    <h4><a th:href="@{/admin/users}">Users list</a></h4>
 
-
-<!--<form th:action="@{/user/get/{id}}" th:method="get" th:object="${user}">-->
-<!--    <h3>Main page</h3>-->
-<!--    <h4><a href="/logout">Logout</a></h4>-->
-<!--    <h4><a href="/user/get/{id}">Profile(User)</a></h4>-->
-<!--    <h4><a href="/admin">Users list(Only for admin)</a></h4>-->
-<!--</form>-->
+</form>
 </body>
 </html>
