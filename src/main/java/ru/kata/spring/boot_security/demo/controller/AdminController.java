@@ -32,18 +32,20 @@ public class AdminController {
     }
 
     @GetMapping("/add")
-    public String showAddNewForm(User user, Model model) {
+    public String showAddNewForm(Model model) {
         model.addAttribute("userForm", new User());
         return "add_user";
     }
+
     @PostMapping("/new")
-    public String addUser(@Valid User user, BindingResult result, Model model) {
+    public String addUser(@Valid User userForm, BindingResult result) {
         if (result.hasErrors()) {
             return "add_user";
         }
-        userService.saveUser(user);
+        userService.saveUser(userForm);
         return "redirect:/admin/users";
     }
+
     @GetMapping("/")
     public String showProfile(Model model, Authentication authentication) {
         if (authentication != null && authentication.isAuthenticated()) {
@@ -56,8 +58,14 @@ public class AdminController {
     }
 
     @GetMapping("/user/{id}")
-    public String getUserProfile(@PathVariable(value = "id", required = true) long id, Model model) {
+    public String getUserProfile(@PathVariable(value = "id") long id, Model model) {
         model.addAttribute("user", userService.findUserById(id));
+        return "user";
+    }
+
+    @GetMapping("/admin/user/{id}")
+    public String adminGetUserProfile(@PathVariable(value = "id") long id, Model model) {
+        model.addAttribute("userByAdmin", userService.findUserById(id));
         return "user";
     }
 
@@ -67,7 +75,7 @@ public class AdminController {
         return "users";
     }
 
-    @GetMapping("/edit/{id}")
+    @GetMapping("/admin/edit/{id}")
     public String getUser(@PathVariable("id") long id, Model model) {
         User user = userService.findUserById(id);
         model.addAttribute("user", user);
@@ -86,10 +94,9 @@ public class AdminController {
     }
 
     @PostMapping("/admin/users")
-    public String  deleteUser(@RequestParam(required = true, defaultValue = "" ) Long userId,
-                              @RequestParam(required = true, defaultValue = "" ) String action,
-                              Model model) {
-        if (action.equals("delete")){
+    public String deleteUser(@RequestParam(defaultValue = "") Long userId,
+                             @RequestParam(defaultValue = "") String action) {
+        if (action.equals("delete")) {
             userService.deleteUser(userId);
         }
         return "redirect:/admin/users";

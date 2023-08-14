@@ -7,17 +7,14 @@
 <body>
 <h1>Main page</h1>
 <div>
-    Пользователя зовут <span th:text="${user.getName()}"></span>
-    <br>
-    Уровень доступа - <span th:text="${user.getRoles()}"></span><br>
+    Welcome, <span th:text="${user.getName()}"></span>
 
 </div>
 <form th:action="@{/user/{id}(id=${user.getId()})}" th:method="get" th:object="${user}">
-    <h3>Main page</h3>
+    <h3>Possibilities</h3>
     <h4><a href="/logout">Logout</a></h4>
     <h4><a th:href="@{/user/__${user.getId()}__}">Profile(User)</a></h4>
-    <h4><a th:href="@{/admin/users}">Users list</a></h4>
-
+    <h4><a th:href="@{/admin/users}">Users list(Only for admin)</a></h4>
 </form>
 </body>
 </html>

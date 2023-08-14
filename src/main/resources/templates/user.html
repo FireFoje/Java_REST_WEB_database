@@ -9,8 +9,8 @@
     <table>
         <thead>
         <tr>
-            <th>Username</th>
-            <th>Lastname</th>
+            <th>Username </th>
+            <th>Lastname </th>
             <th>Email</th>
         </tr>
         </thead>
@@ -23,14 +23,18 @@
         </tbody>
     </table>
 </form>
-<form th:action="@{/edit/__${user.id}__}" method="get">
+<br>
+<form th:action="@{/admin/edit/__${user.id}__}" method="get">
     <input type="hidden" name="_method" value="edit"/>
-    <button type="submit">Edit</button>
+    <button type="submit" id="edit">Edit</button>
+    <label for="edit">Only for admin</label>
 </form>
+<br>
 <form th:action="@{/}" method="get">
     <input type="hidden" name="userId"/>
     <button type="submit">Back to main page</button>
 </form>
+<br>
 <form action="/logout" method="post">
     <button type="submit">Logout</button>
 </form>

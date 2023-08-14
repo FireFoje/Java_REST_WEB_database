@@ -30,12 +30,11 @@ public class UserService implements UserDetailsService {
     @Autowired
     RoleRepository roleRepository;
 
-
     BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = (User) userRepository.findByName(username);
+        User user = userRepository.findByName(username);
 
         if (user == null) {
             throw new UsernameNotFoundException("User not found");

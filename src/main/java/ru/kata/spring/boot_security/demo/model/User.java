@@ -23,6 +23,7 @@ public class User implements UserDetails {
     @Column(name = "last_name")
     private String lastName;
 
+    @Size(min = 3, message = "Password must be have min 3 elements")
     private String password;
     @Column(name = "email")
     private String email;
@@ -65,6 +66,23 @@ public class User implements UserDetails {
     }
 
     @Override
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    @Override
     public boolean isAccountNonExpired() {
         return true;
     }
@@ -98,22 +116,4 @@ public class User implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();
     }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
 }
