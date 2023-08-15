@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.validation.Valid;
@@ -18,9 +19,15 @@ import javax.validation.Valid;
 @Controller
 @Transactional
 public class AdminController {
-    @Autowired
-    private UserService userService;
 
+    private final UserService userService;
+    RoleService roleService;
+
+    @Autowired
+    public AdminController(UserService userService, RoleService roleService) {
+        this.userService = userService;
+        this.roleService = roleService;
+    }
 
     @GetMapping("/login")
     public String loginPage(Authentication authentication, Model model, User user) {
