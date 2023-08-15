@@ -17,12 +17,10 @@ public class RoleServiceImpl implements RoleService {
         this.roleRepository = roleRepository;
     }
 
-    @Override
     public List<Role> getAllRoles() {
         return (List<Role>) roleRepository.findAll();
     }
 
-    @Override
     public Role getRole(String userRole) {
         return roleRepository.getRoleByName(userRole);
     }
@@ -32,7 +30,6 @@ public class RoleServiceImpl implements RoleService {
         return roleRepository.getRoleById(id);
     }
 
-    @Override
     public void addRole(Role role) {
         roleRepository.save(role);
     }
