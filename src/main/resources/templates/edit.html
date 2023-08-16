@@ -30,6 +30,15 @@
       <input type="password" name="password" id="password" placeholder="Min 3 symbols">
       <label for="password">If you don't wanna input new password, enter already exists</label>
     </div>
+    <div class="form-group">
+      <label for="roles">Roles:</label>
+      <select multiple class="form-control form-control-sm" id="roles" name="roles" size="2" required>
+        <option th:each="role: ${roles}" th:value="${role.id}" th:selected="${user.roles.contains(role)}">
+          <th:block th:text="${role.name}">
+          </th:block>
+        </option>
+      </select>
+    </div>
   </div>
   <div class="row">
     <div class="col-md-6 mt-5">

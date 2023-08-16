@@ -7,6 +7,5 @@ import ru.kata.spring.boot_security.demo.model.Role;
 @Repository
 public interface RoleRepository extends CrudRepository<Role, Long> {
     Role getRoleByName(String roleName);
-
     Role getRoleById(long id);
 }

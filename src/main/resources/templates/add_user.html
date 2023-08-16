@@ -18,6 +18,12 @@
   <input type="email" th:field="*{email}" id="email" name="email"><br><br>
   <label for="password">Пароль:</label>
   <input type="password" th:field="*{password}" id="password" name="password"><br><br>
+  <div class="form-group">
+    <label for="roles">Roles:</label>
+    <select class="form-control" id="roles" name="roles" multiple>
+      <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>
+    </select>
+  </div>
   <button type="submit">Save</button>
 </form>
 <br>

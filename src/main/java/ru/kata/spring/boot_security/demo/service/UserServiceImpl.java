@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -54,7 +53,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     public void saveUser(User user) {
-        user.setRoles(Collections.singleton(roleService.getRoleById(1L)));
+        user.setRoles(Collections.singleton(roleService.getRoleByName("ROLE_USER")));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
@@ -63,5 +62,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if (userRepository.findById(userId).isPresent()) {
             userRepository.deleteById(userId);
         }
+    }
+
+    @Override
+    public void updateUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
     }
 }
