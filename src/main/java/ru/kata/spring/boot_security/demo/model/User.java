@@ -1,12 +1,19 @@
 package ru.kata.spring.boot_security.demo.model;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.FetchType;
 import javax.persistence.GenerationType;
@@ -33,6 +40,10 @@ public class User implements UserDetails {
     @Column(name = "email")
     private String email;
     @ManyToMany(fetch = FetchType.LAZY)
+    @Fetch(FetchMode.JOIN)
+//    @JoinTable(name = "users_roles",
+//            joinColumns = @JoinColumn(name = "user_id"),
+//            inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
     public User() {

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -34,12 +35,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByName(username);
+        User user = userRepository.findByNameWithRoles(username);
 
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
-        Hibernate.initialize(user.getRoles());
         return user;
     }
 
@@ -53,7 +53,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     public void saveUser(User user) {
-        user.setRoles(Collections.singleton(roleService.getRoleByName("ROLE_USER")));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
