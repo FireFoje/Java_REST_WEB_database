@@ -35,12 +35,14 @@ public class User implements UserDetails {
     @Column(name = "last_name")
     private String lastName;
 
-    @Size(min = 3, message = "Password must be have min 3 elements")
     private String password;
     @Column(name = "email")
     private String email;
     @ManyToMany(fetch = FetchType.LAZY)
     @Fetch(FetchMode.JOIN)
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
     public User() {
