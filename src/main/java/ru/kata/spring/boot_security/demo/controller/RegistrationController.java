@@ -21,11 +21,6 @@ public class RegistrationController {
         this.userService = userService;
     }
 
-    @GetMapping("/registration")
-    public String registration(Model model) {
-        model.addAttribute("userForm", new User());
-        return "registration";
-    }
     @PostMapping("/registration")
     public String addUser(@ModelAttribute("userForm") @Valid User userForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {

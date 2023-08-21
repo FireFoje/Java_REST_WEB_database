@@ -33,10 +33,11 @@ public class AdminController {
     }
 
     @GetMapping("/login")
-    public String loginPage(Authentication authentication, Model model, User user) {
+    public String loginPage(Authentication authentication, Model model, @AuthenticationPrincipal User user) {
         if (authentication != null && authentication.isAuthenticated()) {
+            user = userService.findUserById(user.getId());
             model.addAttribute("user", user);
-            return "redirect:/";
+            return "redirect:/user/" + user.getId();
         }
         return "login";
     }
