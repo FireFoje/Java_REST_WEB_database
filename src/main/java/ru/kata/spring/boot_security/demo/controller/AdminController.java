@@ -7,17 +7,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
-import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Controller
 @Transactional
@@ -32,15 +36,6 @@ public class AdminController {
         this.roleService = roleService;
     }
 
-//    @GetMapping("/login")
-//    public String loginPage(Authentication authentication, Model model, @AuthenticationPrincipal User user) {
-//        if (authentication != null && authentication.isAuthenticated()) {
-//            user = userService.findUserById(user.getId());
-//            model.addAttribute("user", user);
-//            return "redirect:/user/" + user.getId();
-//        }
-//        return "login";
-//    }
 
     @GetMapping("/admin/add")
     public String showAddNewForm(Model model, @AuthenticationPrincipal User user) {
