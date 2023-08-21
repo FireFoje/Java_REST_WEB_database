@@ -32,15 +32,15 @@ public class AdminController {
         this.roleService = roleService;
     }
 
-    @GetMapping("/login")
-    public String loginPage(Authentication authentication, Model model, @AuthenticationPrincipal User user) {
-        if (authentication != null && authentication.isAuthenticated()) {
-            user = userService.findUserById(user.getId());
-            model.addAttribute("user", user);
-            return "redirect:/user/" + user.getId();
-        }
-        return "login";
-    }
+//    @GetMapping("/login")
+//    public String loginPage(Authentication authentication, Model model, @AuthenticationPrincipal User user) {
+//        if (authentication != null && authentication.isAuthenticated()) {
+//            user = userService.findUserById(user.getId());
+//            model.addAttribute("user", user);
+//            return "redirect:/user/" + user.getId();
+//        }
+//        return "login";
+//    }
 
     @GetMapping("/admin/add")
     public String showAddNewForm(Model model, @AuthenticationPrincipal User user) {
@@ -77,15 +77,15 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/user/{id}")
-    public String getUserProfile(@PathVariable(value = "id") long id, Model model) {
-        model.addAttribute("userProfile", userService.findUserById(id));
+    @GetMapping("/user/{userName}")
+    public String getUserProfile(@PathVariable(value = "userName") String username, Model model) {
+        model.addAttribute("userProfile", userService.loadUserByUsername(username));
         return "user";
     }
 
-    @GetMapping("/admin/user/{id}")
-    public String adminGetUserProfile(@PathVariable(value = "id") long id, Model model) {
-        model.addAttribute("userByAdmin", userService.findUserById(id));
+    @GetMapping("/admin/user/{userName}")
+    public String adminGetUserProfile(@PathVariable(value = "userName") String userName, Model model) {
+        model.addAttribute("userByAdmin", userService.loadUserByUsername(userName));
         return "user";
     }
 

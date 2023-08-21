@@ -29,7 +29,7 @@
       <div class="col-2 p-0">
         <div class="nav flex-column nav-pills pt-4" id="v-pills-tab" role="tablist" aria-orientation="vertical">
           <a class="nav-link active" aria-controls="v-pills-home" aria-selected="true">Admin</a>
-          <a class="nav-item nav-link" th:href="@{/user/{id}(id=${user.getId()})}">User</a>
+          <a class="nav-item nav-link" th:href="@{/user/{userName}(userName=${user.getName()})}">User</a>
         </div>
       </div>
       <div class="col-10 px-0">
