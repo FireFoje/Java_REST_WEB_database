@@ -1,7 +1,6 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,17 +58,6 @@ public class AdminController {
         userForm.setRoles(roles);
         userService.saveUser(userForm);
         return "redirect:/admin/users";
-    }
-
-    @GetMapping("/")
-    public String showProfile(Model model, Authentication authentication) {
-        if (authentication != null && authentication.isAuthenticated()) {
-            User user = (User) authentication.getPrincipal();
-            model.addAttribute("user", user);
-            return "index";
-        } else {
-            return "login";
-        }
     }
 
     @GetMapping("/user/{userName}")
