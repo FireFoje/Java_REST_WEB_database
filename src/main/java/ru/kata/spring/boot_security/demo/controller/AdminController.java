@@ -2,23 +2,22 @@ package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
+
 import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 @Transactional
@@ -42,14 +41,15 @@ public class AdminController {
         return "login";
     }
 
-    @GetMapping("/add")
-    public String showAddNewForm(Model model) {
+    @GetMapping("/admin/add")
+    public String showAddNewForm(Model model, @ModelAttribute("user") User user) {
+//        model.addAttribute("user", user);
         model.addAttribute("userForm", new User());
         model.addAttribute("roles", roleService.getAllRoles());
         return "add_user";
     }
 
-    @PostMapping("/new")
+    @PostMapping("/admin/new")
     public String addUser(@ModelAttribute("userForm") User userForm, @RequestParam("roles") List<Long> roleIds, BindingResult result) {
         if (result.hasErrors()) {
             return "add_user";
@@ -77,7 +77,7 @@ public class AdminController {
 
     @GetMapping("/user/{id}")
     public String getUserProfile(@PathVariable(value = "id") long id, Model model) {
-        model.addAttribute("user", userService.findUserById(id));
+        model.addAttribute("userProfile", userService.findUserById(id));
         return "user";
     }
 
@@ -88,8 +88,10 @@ public class AdminController {
     }
 
     @GetMapping("/admin/users")
-    public String userList(Model model) {
-        model.addAttribute("user", userService.getAllUsers());
+    public String userList(Model model, @AuthenticationPrincipal User user) {
+        model.addAttribute("userList", userService.getAllUsers());
+        model.addAttribute("user", user);
+        model.addAttribute("roleList", roleService.getAllRoles());
         return "users";
     }
 
@@ -97,33 +99,34 @@ public class AdminController {
     public String getUser(@PathVariable("id") long id, Model model) {
         User user = userService.findUserById(id);
         model.addAttribute("user", user);
-        model.addAttribute("roles", roleService.getAllRoles());
-        return "edit";
+        model.addAttribute("roleList", roleService.getAllRoles());
+        model.addAttribute("userRoles", user.getRoles());
+
+        return "users";
     }
 
-    @PostMapping("/update/{id}")
+    @PutMapping("/admin/update/{id}")
     @Transactional
-    public String updateUpdate(@PathVariable("id") long id, @Valid User user, @RequestParam("roles") List<Long> roleIds, BindingResult result) {
+    public String updateUpdate(@ModelAttribute("user") User user, @PathVariable("id") long id, @RequestParam("roles") List<Long> roleIds, BindingResult result, Model model) {
+        model.addAttribute("roleList", roleService.getAllRoles());
         if (result.hasErrors()) {
             user.setId(id);
-            return "edit";
+            return "users";
         }
         Set<Role> roles = new HashSet<>();
         for (Long rolesId : roleIds) {
             Role role = roleService.getRoleById(rolesId);
             roles.add(role);
         }
+
         user.setRoles(roles);
         userService.updateUser(user);
-        return "redirect:/";
+        return "redirect:/admin/users";
     }
 
-    @PostMapping("/admin/users")
-    public String deleteUser(@RequestParam(defaultValue = "") Long userId,
-                             @RequestParam(defaultValue = "") String action) {
-        if (action.equals("delete")) {
-            userService.deleteUser(userId);
-        }
+    @DeleteMapping("/admin/users/delete/{userId}")
+    public String deleteUser(@PathVariable("userId") Long userId) {
+        userService.deleteUser(userId);
         return "redirect:/admin/users";
     }
 }
