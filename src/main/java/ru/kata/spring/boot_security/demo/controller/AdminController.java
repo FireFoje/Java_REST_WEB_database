@@ -42,8 +42,9 @@ public class AdminController {
     }
 
     @GetMapping("/admin/add")
-    public String showAddNewForm(Model model, @ModelAttribute("user") User user) {
-//        model.addAttribute("user", user);
+    public String showAddNewForm(Model model, @AuthenticationPrincipal User user) {
+        user = userService.findUserById(user.getId());
+        model.addAttribute("user", user);
         model.addAttribute("userForm", new User());
         model.addAttribute("roles", roleService.getAllRoles());
         return "add_user";
