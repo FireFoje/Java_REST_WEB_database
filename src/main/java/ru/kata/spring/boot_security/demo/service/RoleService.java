@@ -6,9 +6,8 @@ import java.util.List;
 
 public interface RoleService {
     Role getRoleById(Long id);
-    Role getRoleByName(String name);
+    Role getRoleByName(String name); //Используется в DataLoader
     List<Role> getAllRoles();
-
-    Role getRole(String userRole);
+    void saveRole(Role role); //Используется в DataLoader
 
 }

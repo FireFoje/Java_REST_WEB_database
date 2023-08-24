@@ -3,7 +3,6 @@ package ru.kata.spring.boot_security.demo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,11 +22,10 @@ import java.util.List;
 import java.util.Set;
 
 @Controller
-@Transactional
 public class AdminController {
 
     private final UserService userService;
-    RoleService roleService;
+    private final RoleService roleService;
 
     @Autowired
     public AdminController(UserService userService, RoleService roleService) {
@@ -91,7 +89,6 @@ public class AdminController {
     }
 
     @PutMapping("/admin/update/{id}")
-    @Transactional
     public String updateUpdate(@ModelAttribute("user") User user, @PathVariable("id") long id, @RequestParam("roles") List<Long> roleIds, BindingResult result, Model model) {
         model.addAttribute("roleList", roleService.getAllRoles());
         if (result.hasErrors()) {
