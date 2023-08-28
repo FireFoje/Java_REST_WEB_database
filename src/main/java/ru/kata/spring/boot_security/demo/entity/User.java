@@ -1,24 +1,28 @@
-package ru.kata.spring.boot_security.demo.model;
+package ru.kata.spring.boot_security.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.Column;
+import javax.persistence.ManyToMany;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
 import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Collectors;
+
 
 @Entity
 @Table(name = "users")
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,8 +30,10 @@ public class User implements UserDetails {
     private String name;
     @Column(name = "last_name")
     private String lastName;
-    private String password;
     private String email;
+    private String password;
+
+
     @ManyToMany
     @Fetch(FetchMode.JOIN)
     @JoinTable(name = "users_roles",
@@ -36,6 +42,14 @@ public class User implements UserDetails {
     private Set<Role> roles;
 
     public User() {
+    }
+
+    public User(String name, String lastName, String password, String email, Set<Role> roles) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.lastName = lastName;
+        this.roles = roles;
     }
 
     public Long getId() {
@@ -50,8 +64,8 @@ public class User implements UserDetails {
         return name;
     }
 
-    public String getName() {
-        return name;
+    public void setUsername(String username) {
+        this.name = username;
     }
 
     public String getLastName() {
@@ -62,15 +76,7 @@ public class User implements UserDetails {
         this.lastName = lastName;
     }
 
-    public String getEmail() {
-        return email;
-    }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    @Override
     public String getPassword() {
         return password;
     }
@@ -79,12 +85,37 @@ public class User implements UserDetails {
         this.password = password;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public Set<Role> getRoles() {
         return roles;
     }
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public String roleToString() {
+        return roles.stream().map(Object::toString).collect(Collectors.joining(", "));
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return getRoles();
     }
 
     @Override
@@ -107,12 +138,25 @@ public class User implements UserDetails {
         return true;
     }
 
-    public void setName(String username) {
-        this.name = username;
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return getRoles();
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", roles=" + roles +
+                '}';
     }
 }
