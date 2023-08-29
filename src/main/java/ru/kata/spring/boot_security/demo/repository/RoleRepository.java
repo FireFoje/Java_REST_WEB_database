@@ -6,5 +6,4 @@ import ru.kata.spring.boot_security.demo.entity.Role;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
-    Role findRoleByName(String name);
 }

@@ -68,12 +68,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Optional<User> userFromDB = userRepository.findById(user.getId());
         String newPassword = user.getPassword();
         String currentPassword = userFromDB.get().getPassword();
-
-
         if (!currentPassword.equals(newPassword)) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
-
         userRepository.save(user);
     }
 }
