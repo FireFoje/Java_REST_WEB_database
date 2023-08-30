@@ -1,5 +1,5 @@
 //Страница администратора
-let url = "http://localhost:8080/admin/users";
+let url = "http://localhost:8080/admin/users/";
 
 async function getAdminPage() {
     let page = await fetch(url);
@@ -187,7 +187,7 @@ const password_ed = document.getElementById('password_ed');
 //Форма для изменения пользователя
 async function editModalData(id) {
     $('#editModal').modal('show');
-    const urlDataEd = 'http://localhost:8080/admin/users/' + id;
+    const urlDataEd = url + id;
     let usersPageEd = await fetch(urlDataEd);
     if (usersPageEd.ok) {
         await usersPageEd.json().then(user => {
@@ -204,7 +204,7 @@ async function editModalData(id) {
 
 //Изменение пользователя
 async function editUser() {
-    let urlEdit = 'http://localhost:8080/admin/users/' + id_ed.value;
+    let urlEdit = url + id_ed.value;
     let listOfRole = [];
     for (let i = 0; i < form_ed.rolesForEditing.options.length; i++) {
         if (form_ed.rolesForEditing.options[i].selected) {
@@ -245,7 +245,7 @@ const password_del = document.getElementById('password_del');
 //Форма для удаления пользователя
 async function deleteModalData(id) {
     $('#deleteModal').modal('show');
-    const urlForDel = 'http://localhost:8080/admin/users/' + id;
+    const urlForDel = url + id;
     let usersPageDel = await fetch(urlForDel);
     if (usersPageDel.ok) {
         await usersPageDel.json().then(user => {
@@ -262,7 +262,7 @@ async function deleteModalData(id) {
 
 //Удаление пользователя
 async function deleteUser() {
-    let urlDel = 'http://localhost:8080/admin/users/' + id_del.value;
+    let urlDel = url + id_del.value;
     let method = {
         method: 'DELETE',
         headers: {
